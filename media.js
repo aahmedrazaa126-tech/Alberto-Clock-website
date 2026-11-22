@@ -27,33 +27,10 @@ const IMAGES = {
   tech_lumi: "tech_lumi.svg"
 };
 
-// No poster image: the hero should show the video (or its CSS background while loading), never a watch photo.
+// The hero video source is declared once in the HTML. Do not replace it with a poster or duplicate source.
 const HERO_POSTER = "";
 const VIDEO_WEBM = "";
-const VIDEO_MP4 = "1000894777.mp4";
-
-// Keep page transitions free of the initial-load splash while preserving the 5-second first-visit loader.
-document.addEventListener("click", (event) => {
-  const link = event.target.closest("a[href]");
-  if (!link || link.dataset.nav === "support" || link.dataset.go === "support") return;
-
-  const href = link.getAttribute("href") || "";
-  if (link.dataset.go || /\.html(?:[#?].*)?$/.test(href)) {
-    try { sessionStorage.setItem("albertoPageNavigation", "1"); } catch (error) {}
-  }
-}, true);
-
-// Remove any hard-coded sources so main.js adds the configured video only once.
-const heroVideo = document.getElementById("hero-video");
-if (heroVideo) {
-  heroVideo.removeAttribute("poster");
-  heroVideo.querySelectorAll("source").forEach((source) => source.remove());
-  heroVideo.autoplay = true;
-  heroVideo.muted = true;
-  heroVideo.loop = true;
-  heroVideo.playsInline = true;
-  heroVideo.preload = "auto";
-}
+const VIDEO_MP4 = "";
 
 document.querySelectorAll("[data-img]").forEach((img) => {
   const src = IMAGES[img.dataset.img];
