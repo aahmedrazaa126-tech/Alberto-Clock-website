@@ -27,10 +27,56 @@ const IMAGES = {
   tech_lumi: "tech_lumi.svg"
 };
 
-// The hero video source is declared once in the HTML. Do not replace it with a poster or duplicate source.
+// The homepage owns the video source. Other pages get the same video in their banner.
 const HERO_POSTER = "";
 const VIDEO_WEBM = "";
 const VIDEO_MP4 = "";
+
+(function mountSharedHeroVideo() {
+  const file = location.pathname.split("/").pop().replace(/\.html?$/i, "");
+  const pageName = !file || file === "index" ? "home" : file;
+  const page = document.getElementById("page-" + pageName);
+  if (!page) return;
+
+  const host = page.querySelector(".hero") || page.querySelector(".page-banner");
+  if (!host) return;
+
+  let video = document.getElementById("hero-video");
+  if (!video) {
+    video = document.createElement("video");
+    video.id = "hero-video";
+    video.autoplay = true;
+    video.muted = true;
+    video.loop = true;
+    video.playsInline = true;
+    video.preload = "auto";
+  }
+
+  // Keep the existing homepage source, and add it to pages without a video element.
+  if (!video.querySelector("source") && !video.getAttribute("src")) {
+    const source = document.createElement("source");
+    source.src = "1000894777.mp4";
+    source.type = "video/mp4";
+    video.appendChild(source);
+  }
+  video.removeAttribute("poster");
+  video.muted = true;
+  video.loop = true;
+  video.playsInline = true;
+  if (video.parentNode !== host) host.prepend(video);
+
+  if (!document.getElementById("shared-hero-video-style")) {
+    const style = document.createElement("style");
+    style.id = "shared-hero-video-style";
+    style.textContent = `
+      .page-banner { position: relative; overflow: hidden; }
+      .page-banner video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+      .page-banner > :not(video) { position: relative; z-index: 2; }
+      .page-banner::after { content: ""; position: absolute; inset: 0; background: rgba(63,13,25,.35); z-index: 1; pointer-events: none; }
+    `;
+    document.head.appendChild(style);
+  }
+})();
 
 document.querySelectorAll("[data-img]").forEach((img) => {
   const src = IMAGES[img.dataset.img];
