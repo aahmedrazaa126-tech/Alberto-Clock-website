@@ -23,4 +23,4 @@ const IMAGES = {
 };
 const HERO_POSTER = "alberto-hero-poster.jpg";
 const VIDEO_WEBM = "";
-const VIDEO_MP4 = "video/1000894777.mp4";
+const VIDEO_MP4 = "1000894777.mp4";
